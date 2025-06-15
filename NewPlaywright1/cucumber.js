@@ -1,14 +1,10 @@
 module.exports = {
   default: {
     require: ['src/steps/**/*.ts', 'src/support/**/*.ts'],
-    requireModule: ['ts-node/register'],
+    format: ['@cucumber/pretty-formatter'],
     paths: ['features/**/*.feature'],
-    format: ['@shelex/cucumberjs-allure2-reporter'],
-    formatOptions: {
-      outputFolder: 'allure-results',
-      clean: true
-    },
     parallel: 1,
-    publishQuiet: true
+    publishQuiet: true,
+    requireModule: ['ts-node/register'],
   },
 };
