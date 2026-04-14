@@ -1,0 +1,17 @@
+{
+  "name": "ai-test-agent",
+  "version": "1.0.0",
+  "scripts": {
+    "generate": "node src/ai/generateScript.js",
+    "test": "npx playwright test",
+    "report": "allure generate allure-results --clean -o allure-report"
+  },
+  "dependencies": {
+    "openai": "^4.0.0",
+    "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.45.0",
+    "allure-playwright": "^2.0.0"
+  }
+}
