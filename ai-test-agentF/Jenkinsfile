@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'node18'
+    }
+
     parameters {
         text(name: 'SCENARIO', defaultValue: 'Login test', description: 'Enter test scenario')
     }
@@ -10,29 +14,51 @@ pipeline {
     }
 
     stages {
-        stage('Install') {
+
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/<your-username>/ai-test-agent.git'
+            }
+        }
+
+        stage('Install Dependencies') {
             steps {
                 sh 'npm install'
                 sh 'npx playwright install'
             }
         }
 
-        stage('Generate Test') {
+        stage('Generate Test (AI)') {
             steps {
-                sh 'SCENARIO="${SCENARIO}" npm run generate'
+                sh '''
+                echo "Scenario: $SCENARIO"
+                SCENARIO="$SCENARIO" npm run generate
+                '''
             }
         }
 
-        stage('Run Test') {
+        stage('Run Playwright Tests') {
             steps {
                 sh 'npm test'
             }
         }
 
-        stage('Report') {
+        stage('Generate Allure Report') {
             steps {
                 sh 'npm run report'
             }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'allure-report/**', allowEmptyArchive: true
+        }
+        success {
+            echo '✅ Test Execution Successful'
+        }
+        failure {
+            echo '❌ Test Execution Failed'
         }
     }
 }
