@@ -17,48 +17,50 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/<your-username>/ai-test-agent.git'
+                git 'https://github.com/Manu-Test28/Git_learns.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
-                sh 'npx playwright install'
+                dir('ai-test-agentF') {
+                    sh 'npm install'
+                    sh 'npx playwright install'
+                }
             }
         }
 
         stage('Generate Test (AI)') {
             steps {
-                sh '''
-                echo "Scenario: $SCENARIO"
-                SCENARIO="$SCENARIO" npm run generate
-                '''
+                dir('ai-test-agentF') {
+                    sh '''
+                    echo "Scenario: $SCENARIO"
+                    SCENARIO="$SCENARIO" npm run generate
+                    '''
+                }
             }
         }
 
         stage('Run Playwright Tests') {
             steps {
-                sh 'npm test'
+                dir('ai-test-agentF') {
+                    sh 'npm test'
+                }
             }
         }
 
         stage('Generate Allure Report') {
             steps {
-                sh 'npm run report'
+                dir('ai-test-agentF') {
+                    sh 'npm run report'
+                }
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: 'allure-report/**', allowEmptyArchive: true
-        }
-        success {
-            echo '✅ Test Execution Successful'
-        }
-        failure {
-            echo '❌ Test Execution Failed'
+            archiveArtifacts artifacts: 'ai-test-agentF/allure-report/**', allowEmptyArchive: true
         }
     }
 }
