@@ -24,8 +24,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 dir('ai-test-agentF') {
-                    sh 'npm install'
-                    sh 'npx playwright install'
+                    bat 'npm install'
+                    bat 'npx playwright install'
                 }
             }
         }
@@ -33,10 +33,11 @@ pipeline {
         stage('Generate Test (AI)') {
             steps {
                 dir('ai-test-agentF') {
-                    sh '''
-                    echo "Scenario: $SCENARIO"
-                    SCENARIO="$SCENARIO" npm run generate
-                    '''
+                    bat """
+                    echo Scenario: %SCENARIO%
+                    set SCENARIO=%SCENARIO%
+                    npm run generate
+                    """
                 }
             }
         }
@@ -44,7 +45,7 @@ pipeline {
         stage('Run Playwright Tests') {
             steps {
                 dir('ai-test-agentF') {
-                    sh 'npm test'
+                    bat 'npm test'
                 }
             }
         }
@@ -52,7 +53,7 @@ pipeline {
         stage('Generate Allure Report') {
             steps {
                 dir('ai-test-agentF') {
-                    sh 'npm run report'
+                    bat 'npm run report'
                 }
             }
         }
