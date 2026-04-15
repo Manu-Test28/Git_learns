@@ -24,8 +24,19 @@ async function generateTest() {
 
   const code = response.data.response;
 
-  fs.mkdirSync("tests/generated", { recursive: True });
-  fs.writeFileSync("tests/generated/test.spec.js", code);
+ // Clean AI output (remove markdown if present)
+    code = code.replace(/```javascript/g, "")
+               .replace(/```/g, "")
+               .trim();
+
+    fs.mkdirSync("tests/generated", { recursive: true });
+    fs.writeFileSync("tests/generated/test.spec.js", code);
+
+    console.log("✅ Test generated successfully!");
+  } catch (error) {
+    console.error("❌ Error generating test:", error.message);
+    process.exit(1);
+  }
 }
 
 generateTest();
