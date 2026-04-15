@@ -18,7 +18,7 @@ if (!scenario) {
 
 async function generateTest() {
   const response = await client.chat.completions.create({
-    model: "gpt-5.3",
+    model: "gpt-4o",
     messages: [
       { role: "system", content: "You are an expert QA automation engineer." },
       { role: "user", content: buildPrompt(scenario) }
